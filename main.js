@@ -177,9 +177,6 @@
     {
         let dbname='projects';
         let request=window.indexedDB.open('note_20150514',1);
-        let finish=function(){
-
-        };
         request.onupgradeneeded=function(e){
             let idb=e.target.result;
             if(idb.objectStoreNames.contains(dbname)){
