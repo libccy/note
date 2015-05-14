@@ -68,12 +68,15 @@
 			return Object.prototype.toString.call(obj)==='[object Object]';
 		},
     };
-    let click={
+    let listener={
         newProj:function(e){
             if(e.keyCode===13){
                 this.contentEditable=false;
             }
         }
+    };
+    let current={
+        id:0
     };
     let node=function(){
         let tagName='div',attrs=[];
@@ -152,77 +155,51 @@
         }
         return node;
     };
+    let nodes={
+        toolbar:node('#toolbar.block'),
+        main:node('#main.block'),
+        statusbar:node('#statusbar.block'),
+    };
+    nodes.sidebar1=node('.sidebar.left',nodes.main);
+    nodes.sidebar2=node('.sidebar.right',nodes.main);
+    nodes.content=node('#content',nodes.main);
 
-    let idb;
-    let database={
-        dbname:'note_20150415',
-        name:'note',
-        id:'main',
-        version:1,
-        config:{},
-        content:[]
-    };
-    let save=function(){
-        idb.transaction([database.name],'readwrite').objectStore(database.name).put({
-            id:database.id,
-            config:database.config,
-            content:database.content
-        });
-    };
-    let resetDatabase=function(){
-        window.indexedDB.deleteDatabase(database.dbname);
-    };
-    let toolbar=node('#toolbar.block');
-    let main=node('#main.block');
-    let statusbar=node('#statusbar.block');
-    let sidebar1=node('.sidebar.left',main);
-    let sidebar2=node('.sidebar.right',main);
-    let content=node('#content',main);
-
-    node(sidebar1,'.add','+',function(){
-        let item=node(sidebar1,this,'.single','<div class="caption">新项目</div>');
+    node(nodes.sidebar1,'.add','+',function(){
+        let item=node(nodes.sidebar1,this,'.single','<div class="caption">新项目</div>');
         item.firstChild.contentEditable=true;
-        item.firstChild.addEventListener('keydown',click.newProj);
+        item.firstChild.addEventListener('keydown',listener.newProj);
     });
     window.addEventListener('load',function(){
-        document.body.appendChild(toolbar);
-        document.body.appendChild(main);
-        document.body.appendChild(statusbar);
+        document.body.appendChild(nodes.toolbar);
+        document.body.appendChild(nodes.main);
+        document.body.appendChild(nodes.statusbar);
     });
     {
-        let request=window.indexedDB.open(database.dbname,database.version);
+        let dbname='projects';
+        let request=window.indexedDB.open('note_20150514',1);
         let finish=function(){
 
         };
         request.onupgradeneeded=function(e){
-            idb=e.target.result;
-            if(idb.objectStoreNames.contains(database.name)){
-                idb.deleteObjectStore(database.name);
+            let idb=e.target.result;
+            if(idb.objectStoreNames.contains(dbname)){
+                idb.deleteObjectStore(dbname);
             }
-            idb.createObjectStore(database.name,{keyPath:'id'});
+            idb.createObjectStore(dbname,{keyPath: 'id'});
         };
         request.onsuccess=function(e){
-            idb=e.target.result;
-            let store=idb.transaction([database.name],'readwrite').objectStore(database.name);
-            store.get(database.id).onsuccess=function(e){
-                if(!e.target.result){
-                    store.add({id:database.id}).onsuccess=finish;
-                }
-                else{
-                    database.config=e.target.result.config||database.config;
-                    database.content=e.target.result.content||database.content;
-                    finish();
-                }
-            };
+            let idb=e.target.result;
+            let store=idb.transaction(dbname).objectStore(dbname);
+            // store.get(database.id).onsuccess=function(e){
+            //     if(!e.target.result){
+            //         store.add({id:database.id}).onsuccess=finish;
+            //     }
+            //     else{
+            //         database.config=e.target.result.config||database.config;
+            //         database.content=e.target.result.content||database.content;
+            //         finish();
+            //     }
+            // };
         };
     }
-
-    content.addEventListener('click',function(){
-
-    });
-
-    window.database=database;
-    window.save=save;
-    window.resetDatabase=resetDatabase;
-    window.idb=idb;
 }
