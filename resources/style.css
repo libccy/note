@@ -1,0 +1,90 @@
+html,body{
+    width:100%;
+    height:100%;
+    margin:0;
+    overflow:hidden;
+    -webkit-user-select:none;
+    cursor:default;
+    font-family:'STHeiti','SimHei','WenQuanYi Micro Hei',
+		'Microsoft JhengHei','Microsoft YaHei',Helvetica,Arial,sans-serif
+}
+body>.block{
+    width:100%;
+}
+#toolbar{
+    height:40px;
+    background-color:rgb(240,240,240);
+    border-width: 0 0 1px;
+	border-style:solid;
+    border-color:rgb(220,220,220);
+}
+#main{
+    height:calc(100% - 67px);
+    display:flex;
+}
+#main>div{
+    display:inline-block;
+    height:100%;
+}
+#main>.sidebar{
+    min-width:200px;
+    max-width:240px;
+    flex:1;
+    border-width: 0 1px 0 0;
+	border-style:solid;
+    border-color:rgb(220,220,220);
+    overflow:scroll;
+}
+#main>.sidebar.left{
+    background-color:rgb(240,240,240);
+}
+#main>.sidebar.left>div{
+    overflow:hidden;
+    border-width: 0 0 1px;
+	border-style:solid;
+	border-image:linear-gradient(to right, transparent,rgb(220,220,220) 10%,rgb(220,220,220) 90%,transparent) 0 1 100%;
+}
+#main>.sidebar.left>.single{
+    height:35px;
+    -webkit-animation:proj1 0.3s;
+}
+#main>.sidebar.left>.double{
+    height:80px;
+    -webkit-animation:proj2 0.3s;
+}
+#main>.sidebar.left>div>div{
+    margin-left:20px;
+}
+#main>.sidebar.left>div>.caption{
+    line-height:35px;
+    white-space:nowrap;
+    outline:none;
+}
+#main>.sidebar.left>.add{
+    text-align:center;
+    font-size:35px;
+    height:50px;
+    line-height:50px;
+    color:rgb(160,160,160);
+    margin-bottom:10px;
+    border:none;
+}
+#main>#content{
+    max-width:600px;
+    margin:auto;
+    flex:2;
+}
+#statusbar{
+    background-color:rgb(240,240,240);
+    height:25px;
+    border-width: 1px 0 0;
+	border-style:solid;
+    border-color:rgb(220,220,220);
+}
+
+
+@-webkit-keyframes proj1{from{opacity:0;margin-bottom:-35px;transform:translateX(-50px)}}
+
+::-webkit-scrollbar{
+    display:none;
+}
